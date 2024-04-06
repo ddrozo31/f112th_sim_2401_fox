@@ -33,16 +33,19 @@ def generate_launch_description():
                     get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
              )
 
+
+    robot_name = '00_tricycle_robot.urdf.xacro'
+    pkg_name = 'f112th_sim_2401_fox'
+
     pkg_path = os.path.join(
-        get_package_share_directory('f112th_sim_2401_fox'))
+        get_package_share_directory(pkg_name))
 
     xacro_file = os.path.join(pkg_path,
                               'description',
-                              'test_tricycle_drive.xacro.urdf')
+                              robot_name)
 
-    doc = xacro.parse(open(xacro_file))
-    xacro.process_doc(doc)
-    params = {'robot_description': doc.toxml()}
+    robot_description_config = xacro.process_file(xacro_file)
+    params = {'robot_description': robot_description_config.toxml(), 'use_sim_time': True}
 
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
