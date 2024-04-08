@@ -16,10 +16,10 @@ joint_state_broadcaster:
 tricycle_controller:
   ros__parameters:
     # Model
-    traction_joint_name: traction_joint # Name of traction joint in URDF
-    steering_joint_name: steering_joint # Name of steering joint in URDF
-    wheel_radius: 0.3 # Radius of front wheel
-    wheelbase: 1.7 # Distance between center of back wheels and front wheel
+    traction_joint_name: left_traction_joint #traction_joint # Name of traction joint in URDF
+    steering_joint_name: left_steering_joint #steering_joint # Name of steering joint in URDF
+    wheel_radius: 0.035 # Radius of front wheel
+    wheelbase: 0.208 # Distance between center of back wheels and front wheel
 
     # Odometry
     odom_frame_id: odom
