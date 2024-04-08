@@ -89,6 +89,21 @@ def generate_launch_description():
                 on_exit=[load_tricycle_controller],
             )
         )
+    
+    joystick = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([os.path.join(
+                    get_package_share_directory(pkg_name),'launch','joystick.launch.py'
+                )]), launch_arguments={'use_sim_time': 'true'}.items()
+    )
+
+
+    twist_mux_params = os.path.join(get_package_share_directory(pkg_name),'config','twist_mux.yaml')
+    
+    twist_mux_node = Node(package='twist_mux', 
+                    executable='twist_mux',
+                    parameters=[twist_mux_params,{'use_sim_time': True}],
+                    remappings=[('/cmd_vel_out','/tricycle_controller/cmd_vel')]
+    )
 
     return LaunchDescription([
         delay_joint_state_after_spawn_entity,
@@ -97,4 +112,6 @@ def generate_launch_description():
         rviz,
         node_robot_state_publisher,
         spawn_entity,
+        joystick,
+        twist_mux_node
     ])

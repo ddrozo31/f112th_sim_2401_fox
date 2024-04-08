@@ -53,12 +53,12 @@
   <link name="left_wheel">
     <collision>
       <geometry>
-        <cylinder length="${wheel_len}" radius="${wheel_radius}" />
+        <sphere radius="${wheel_radius}" />
       </geometry>
     </collision>
     <visual>
       <geometry>
-        <cylinder length="${wheel_len}" radius="${wheel_radius}" />
+        <cylinder length="${wheel_len}" radius="${wheel_radius}" /> 
       </geometry>
       <material name="Black" />
     </visual>
@@ -70,6 +70,7 @@
   </link>
 
   <joint name="left_wheel_joint" type="continuous">
+    <mimic joint="left_traction_joint"/>
     <origin xyz="-${base_lx/2} ${base_ly/2+wheel_len/2} -${base_lz/2}" rpy="-1.57 0 0" />
     <parent link="chassis" />
     <child link="left_wheel" />
@@ -81,7 +82,7 @@
   <link name="right_wheel">
     <collision>
       <geometry>
-        <cylinder length="${wheel_len}" radius="${wheel_radius}" />
+        <sphere radius="${wheel_radius}" />
       </geometry>
     </collision>
     <visual>
@@ -98,6 +99,7 @@
   </link>
 
   <joint name="right_wheel_joint" type="continuous">
+    <mimic joint="left_traction_joint"/>
     <origin xyz="-${base_lx/2} -${base_ly/2+wheel_len/2} -${base_lz/2}" rpy="-1.57 0 0" />
     <parent link="chassis" />
     <child link="right_wheel" />
@@ -120,11 +122,12 @@
     </inertial>
   </link>
 
-  <joint name="left_steering_joint" type="continuous">
+  <joint name="left_steering_joint" type="revolute">
     <origin xyz="${base_lx/2} ${base_ly/2+wheel_len/2} -${base_lz/2}" rpy="0 0 0" />
     <parent link="chassis" />
     <child link="left_steering_link" />
     <axis xyz="0 0 1" />
+    <limit effort="100.0" lower="-0.785398" upper="0.785398" velocity="0.1"/>
   </joint>
 
   <!-- traction wheel link -->
@@ -142,7 +145,7 @@
     </inertial>
     <collision>
       <geometry>
-        <cylinder length="${wheel_len}" radius="${wheel_radius}" />
+        <sphere radius="${wheel_radius}" />
       </geometry>
     </collision>
   </link>
@@ -171,12 +174,13 @@
     </inertial>
   </link>
 
-  <joint name="right_steering_joint" type="continuous">
+  <joint name="right_steering_joint" type="revolute">
     <mimic joint="left_steering_joint"/>
     <origin xyz="${base_lx/2} -${base_ly/2+wheel_len/2} -${base_lz/2}" rpy="0 0 0" />
     <parent link="chassis" />
     <child link="right_steering_link" />
     <axis xyz="0 0 1" />
+    <limit effort="100.0" lower="-0.785398" upper="0.785398" velocity="0.1"/>
   </joint>
 
   <!-- traction wheel link -->
@@ -194,7 +198,7 @@
     </inertial>
     <collision>
       <geometry>
-        <cylinder length="${wheel_len}" radius="${wheel_radius}" />
+        <sphere radius="${wheel_radius}" />
       </geometry>
     </collision>
   </link>
