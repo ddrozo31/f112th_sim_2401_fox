@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="tricycle_drive">
+
+    <xacro:include filename="01_properties.xacro"/>
+    <xacro:include filename="03_bicycle_drive.xacro"/>
+    <xacro:include filename="04_bicycle_ros2_control.xacro"/>
+
+</robot>

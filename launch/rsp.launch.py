@@ -14,7 +14,7 @@ def generate_launch_description():
 
     # Check if we're told to use sim time
     use_sim_time = LaunchConfiguration('use_sim_time')
-    robot_name = 'robot.urdf.xacro'
+    robot_name = '00_bicycle_robot.urdf.xacro'
     pkg_name = 'f112th_sim_2401_fox'
 
     # Process the URDF file

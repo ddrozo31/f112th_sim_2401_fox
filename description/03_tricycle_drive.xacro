@@ -2,19 +2,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:include filename="02_inertia_macro.xacro"/>
-
-  <!-- Constants for robot dimensions -->
-  <xacro:property name="PI" value="3.1415926535897931"/>
-  <xacro:property name="cm2m" value="0.01" /> <!-- arbitrary value for base mass -->
-  <xacro:property name="base_lx" value="${35.6*cm2m}" /> 
-  <xacro:property name="base_ly" value="${20.8*cm2m}" /> 
-  <xacro:property name="base_lz" value="${11.0*cm2m}" /> 
-  <xacro:property name="base_mass" value="2.0" />
   
-  <xacro:property name="wheel_mass" value=".25" /> <!-- arbitrary value for wheel mass -->
-  <xacro:property name="wheel_len" value="${3*cm2m}" />
-  <xacro:property name="wheel_radius" value="${3.5*cm2m}" />
-
 
   <link name="base_link" />
 
