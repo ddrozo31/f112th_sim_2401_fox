@@ -59,17 +59,28 @@ def generate_launch_description():
                                    '-entity', 'tricycle'],
                         output='screen')
 
-    load_joint_state_broadcaster = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'joint_state_broadcaster'],
-        output='screen'
-    )
+    #load_joint_state_broadcaster = ExecuteProcess(
+    #    cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+    #        'joint_state_broadcaster'],
+    #   output='screen'
+    #)
 
-    load_tricycle_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'bicycle_drive_controller'],
-        output='screen'
-    )
+    #load_tricycle_controller = ExecuteProcess(
+    #    cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', #'bicycle_drive_controller'],
+    #    output='screen'
+    #)
+
+        # Launch the Diff_Controller
+    bicycle_drive_spawner = Node(
+        package='controller_manager', 
+        executable='spawner', 
+        arguments=['bicycle_drive_controller'])
+        
+        # Launch the Joint_Broadcaster
+    joint_broad_spawner = Node(
+        package='controller_manager',
+        executable='spawner', 
+        arguments=['joint_state_broadcaster'])
 
     rviz = Node(
         package='rviz2',
@@ -77,18 +88,18 @@ def generate_launch_description():
         output='screen',
     )
 
-    delay_joint_state_after_spawn_entity = RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=spawn_entity,
-                on_exit=[load_joint_state_broadcaster],
-            )
-        )
-    delay_tricycle_after_joint_state= RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=load_joint_state_broadcaster,
-                on_exit=[load_tricycle_controller],
-            )
-        )
+    #delay_joint_state_after_spawn_entity = RegisterEventHandler(
+    #        event_handler=OnProcessExit(
+    #            target_action=spawn_entity,
+    #            on_exit=[load_joint_state_broadcaster],
+    #       )
+    #    )
+    #delay_tricycle_after_joint_state= RegisterEventHandler(
+    #        event_handler=OnProcessExit(
+    #            target_action=load_joint_state_broadcaster,
+    #            on_exit=[load_tricycle_controller],
+    #        )
+    #    )
     
     joystick = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
@@ -106,12 +117,15 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        delay_joint_state_after_spawn_entity,
-        delay_tricycle_after_joint_state,
         gazebo,
         rviz,
         node_robot_state_publisher,
         spawn_entity,
         joystick,
-        twist_mux_node
+        twist_mux_node,
+        bicycle_drive_spawner,
+        joint_broad_spawner
     ])
+
+#delay_joint_state_after_spawn_entity,
+#delay_tricycle_after_joint_state,
