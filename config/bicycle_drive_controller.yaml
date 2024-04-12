@@ -2,34 +2,42 @@ controller_manager:
   ros__parameters:
     update_rate: 50 # Hz
     use_sim_time: true
-
+ 
     bicycle_drive_controller:
       type: bicycle_steering_controller/BicycleSteeringController
-
+ 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
-
+ 
 bicycle_drive_controller:
   ros__parameters:
     # Model
-    traction_joint_name: ['back_wheel_joint'] # Name of traction joint in URDF
-    steering_joint_name: ['front_steering_joint'] # Name of steering joint in URDF
-    front_steering: true 
-    wheel_radius: 0.035 # Radius of rear wheel
-    wheelbase: 0.208 # Distance between center of rear wheel and front wheel
+    wheelbase: 0.208 # Distance between center of rear wheel and front steering axis
+    wheel_radius: 0.035 # Radius of rear wheel, assuming front and rear wheels are the same
+    steer_angle_limit: 0.5 # Maximum steering angle in rad
+ 
+    # Joint names
+    rear_wheels_names: ["back_wheel_joint"] # Name of the rear wheel joint in URDF
+    front_wheels_names: ["front_steering_joint"] # Name of the front steering joint in URDF
+ 
+    front_steering: true
+    open_loop: false
+    velocity_rolling_window_size: 10
+    position_feedback: false # Assuming this was meant to indicate if feedback is used for position control
+ 
     # Odometry
-    odom_frame_id: odom
-    base_frame_id: base_link
-    publish_rate: 50.0 # publish rate of odom and tf
-    open_loop: false # if True, uses cmd_vel instead of hardware interface feedback to compute odometry
+    odom_frame_id: "odom"
+    base_frame_id: "base_link"
+    publish_rate: 50.0 # Publish rate of odom and tf
     enable_odom_tf: true # If True, publishes odom<-base_link TF
-    odom_only_twist: false # If True, publishes on /odom only linear.x and angular.z; Useful for computing odometry in another node, e.g robot_localization's ekf
-    pose_covariance_diagonal: [0.0, 7.0, 14.0, 21.0, 28.0, 35.0] # Need to be set if fusing odom with other localization source
-    twist_covariance_diagonal: [0.0, 7.0, 14.0, 21.0, 28.0, 35.0] # Need to be set if fusing odom with other localization source
-    velocity_rolling_window_size: 10 # Rolling window size of rcppmath::RollingMeanAccumulator applied on linear and angular speeds published on odom
-    
+    odom_only_twist: false # If True, publishes on /odom only linear.x and angular.z
+ 
+    pose_covariance_diagonal: [0.0, 7.0, 14.0, 21.0, 28.0, 35.0] # Need to be set if fusing odom with other localization sources
+    twist_covariance_diagonal: [0.0, 7.0, 14.0, 21.0, 28.0, 35.0] # Need to be set if fusing odom with other localization sources
+ 
     # cmd_vel input
-    cmd_vel_timeout: 500 # In milliseconds. Timeout to stop if no cmd_vel is received
+    cmd_vel_timeout: 0.5 # In seconds. Timeout to stop if no cmd_vel is received
     use_stamped_vel: false # Set to True if using TwistStamped.
+ 
     # Debug
-    publish_ackermann_command: true # Publishes AckermannDrive. The speed does not comply to the msg definition, it the wheel angular speed in rad/s.
+    publish_ackermann_command: true # If True, publishes AckermannDrive commands for debugging
