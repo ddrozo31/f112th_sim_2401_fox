@@ -59,22 +59,26 @@ def generate_launch_description():
                                    '-entity', 'tricycle'],
                         output='screen')
 
-    #load_joint_state_broadcaster = ExecuteProcess(
-    #    cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-    #        'joint_state_broadcaster'],
-    #   output='screen'
-    #)
 
-    #load_tricycle_controller = ExecuteProcess(
-    #    cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', #'bicycle_drive_controller'],
-    #    output='screen'
-    #)
+    '''
+    load_joint_state_broadcaster = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+            'joint_state_broadcaster'],
+       output='screen'
+    )
+
+    load_bicycle_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'bicycle_steering_controller'],
+        output='screen'
+    )
+    '''
 
         # Launch the Diff_Controller
     bicycle_drive_spawner = Node(
         package='controller_manager', 
         executable='spawner', 
-        arguments=['bicycle_drive_controller'])
+        arguments=['bicycle_steering_controller'],
+        remappings=[("/bicycle_steering_controller/tf_odometry", "/tf")])
         
         # Launch the Joint_Broadcaster
     joint_broad_spawner = Node(
@@ -87,20 +91,21 @@ def generate_launch_description():
         executable='rviz2',
         output='screen',
     )
+    '''
+    delay_joint_state_after_spawn_entity = RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=spawn_entity,
+                on_exit=[load_joint_state_broadcaster],
+           )
+        )
+    delay_tricycle_after_joint_state= RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_joint_state_broadcaster,
+                on_exit=[load_bicycle_controller],
+            )
+        )
+    '''
 
-    #delay_joint_state_after_spawn_entity = RegisterEventHandler(
-    #        event_handler=OnProcessExit(
-    #            target_action=spawn_entity,
-    #            on_exit=[load_joint_state_broadcaster],
-    #       )
-    #    )
-    #delay_tricycle_after_joint_state= RegisterEventHandler(
-    #        event_handler=OnProcessExit(
-    #            target_action=load_joint_state_broadcaster,
-    #            on_exit=[load_tricycle_controller],
-    #        )
-    #    )
-    
     joystick = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
                     get_package_share_directory(pkg_name),'launch','joystick.launch.py'
@@ -113,8 +118,17 @@ def generate_launch_description():
     twist_mux_node = Node(package='twist_mux', 
                     executable='twist_mux',
                     parameters=[twist_mux_params,{'use_sim_time': True}],
-                    remappings=[('/cmd_vel_out','/bicycle_drive_controller/reference_unstamped')]
+                    remappings=[('/cmd_vel_out','/cmd_vel_out_mux')]
     )
+
+    TwistStamper = Node(
+                    package='twist_stamper',
+                    executable='twist_stamper',
+                    output='screen',
+                     remappings=[('/cmd_vel_in','cmd_vel_out_mux'),
+                                 ('/cmd_vel_out','/bicycle_steering_controller/reference')]
+    )
+
 
     return LaunchDescription([
         gazebo,
@@ -124,8 +138,12 @@ def generate_launch_description():
         joystick,
         twist_mux_node,
         bicycle_drive_spawner,
-        joint_broad_spawner
+        joint_broad_spawner,
+        TwistStamper
     ])
 
 #delay_joint_state_after_spawn_entity,
 #delay_tricycle_after_joint_state,
+
+#bicycle_drive_spawner
+#joint_broad_spawner

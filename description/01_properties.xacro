@@ -29,34 +29,46 @@
     <color rgba="1 1 1 1" />
   </material>
 
+  <material name="Invisible">
+    <color rgba="0.0 0.0 0.0 0.0"/>
+  </material>
+
+  <gazebo reference="virtual_rear_wheel">
+    <material>Gazebo/Invisible</material>
+  </gazebo>
+  <gazebo reference="virtual_front_wheel">
+    <material>Gazebo/Invisible</material>
+  </gazebo>
+
+
     <!-- Link1 -->
   <gazebo reference="chassis">
     <material>Gazebo/Orange</material>
   </gazebo>
 
   <!-- Link2 -->
-  <gazebo reference="left_wheel">
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
+  <gazebo reference="rear_right_wheel">
+    <mu1>0.01</mu1>
+    <mu2>0.01</mu2>
     <material>Gazebo/Black</material>
   </gazebo>
 
   <!-- Link3 -->
-  <gazebo reference="right_wheel">
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
+  <gazebo reference="rear_left_wheel">
+    <mu1>0.01</mu1>
+    <mu2>0.01</mu2>
     <material>Gazebo/Black</material>
   </gazebo>
 
-  <gazebo reference="steering_link">
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
+  <gazebo reference="front_right_wheel">
+    <mu1>0.01</mu1>
+    <mu2>0.01</mu2>
     <material>Gazebo/Black</material>
   </gazebo>
 
-  <gazebo reference="wheel_front_link">
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
+  <gazebo reference="front_left_wheel">
+    <mu1>0.01</mu1>
+    <mu2>0.01</mu2>
     <material>Gazebo/Black</material>
   </gazebo>
 
